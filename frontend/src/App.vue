@@ -51,9 +51,6 @@ export default {
 }
 .content {
   min-height: 780px;
-  white-space: nowrap;
-  overflow-y: auto;
-  -webkit-overflow-scrolling:auto;
   height: 780px;
   
 }

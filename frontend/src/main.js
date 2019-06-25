@@ -6,6 +6,19 @@ import router from './router'
 import store from './store'
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
+import 'wangeditor/release/wangEditor.min.css'
+import hljs from 'highlight.js';
+import 'highlight.js/styles/googlecode.css' //样式文件
+// import '../static/css/article.css'  
+
+Vue.directive('highlight',function (el) {
+    let blocks = el.querySelectorAll('pre code');
+    setTimeout(() =>{
+        blocks.forEach((block)=>{
+        hljs.highlightBlock(block)
+        })
+    }, 200)
+})
 Vue.use(iView);
 
 Vue.config.productionTip = false

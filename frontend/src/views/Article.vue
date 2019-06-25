@@ -6,12 +6,15 @@
                     <Col span="1">
                         <Button type="primary" @click="backArticles()">返回列表</Button>
                     </Col>
-                    <Col span="22" class="article-title">
+                    <Col span="21" class="article-title">
                         <h2>{{article.title}}</h2>
+                    </Col>
+                    <Col span="1">
+                        <Button type="primary" @click="()=>{$router.push('/admin?id=' + article.id)}">编辑</Button>
                     </Col>
                 </Row>
             </div>
-            <div class="article-content" v-html="vhtml">
+            <div class="article-content w-e-text" v-html="vhtml">
             </div>
         </Card>
     </div>
@@ -71,6 +74,9 @@
         height: 670px;
         word-wrap: break-word;
         text-align: left;
+        white-space: nowrap;
+        overflow-y: auto;
+        -webkit-overflow-scrolling:auto;
     }
 
 </style>

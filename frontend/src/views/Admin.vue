@@ -8,12 +8,25 @@
                     </Select>
                 </Col>
                 <Col span="2">
-                    <Button type="primary" v-if="category" @click="showCategoryEditForm()">修改</Button>
+                    <Button type="primary" v-if="category.id != undefined && category.id != 0" @click="showCategoryEditForm()">修改</Button>
                     <Button type="primary" @click="showCategoryEditForm()">新增</Button>
                 </Col>
             </Row>
-            <Row>
-                <Input v-model="article.title" placeholder=""></Input>
+            <Row  class="admin-row">
+                <Col span="2">
+                    <span>标题：</span>
+                </Col>
+                <Col span="22">
+                    <Input v-model="article.title" placeholder=""></Input>
+                </Col>
+            </Row>
+            <Row  class="admin-row">
+                <Col span="2">
+                    <span>简述：</span>
+                </Col>
+                <Col span="22">
+                    <Input v-model="article.outline" type="textarea" placeholder=""></Input>
+                </Col>
             </Row>
             <Row  class="admin-row">
                 <div id='editor' class="editor"></div>
@@ -45,7 +58,7 @@
     import Editor from 'wangeditor'
     import 'wangeditor/release/wangEditor.min.css'
     import {AddArticle, GetArticle, UpdateArticle} from '@/api/article.js'
-    import {GetCategories, AddCategory, UpdateCategory} from '@/api/category.js'
+    import {GetCategories, AddCategory, UpdateCategory, GetCategory} from '@/api/category.js'
     let Base64 = require('js-base64').Base64;
 
     export default {
@@ -77,12 +90,13 @@
         methods: {
             getArticle: function(){
                 GetArticle({id:this.articleId, edit:true}).then(res=>{
-                    if(res.Code == 0 && this.categoryId == res.Data.id){
+                    console.info(this.articleId , res.Data.id)
+                    if(res.Code == 0 && this.articleId == res.Data.id){
                         this.article = res.Data
-                        this.category = this.article.category
+                        this.category.id = this.article.category
                         this.vhtml = Base64.decode(this.article.content)
                         if(this.editor){
-                            this.editor.txt.html = this.vhtml
+                            this.editor.txt.html(this.vhtml)
                         }
 
                     }
@@ -98,20 +112,37 @@
             updateArticle: function() {
                 UpdateArticle(this.article).then(res=>{
                     if(res.Code == 0){
-
+                        this.$Notice.open({
+                            title: 'Succeeded',
+                            desc: "博客 " + this.article.title + " 已保存。"
+                        });
                     }
                 })
             },
             addArticle: function(){
                 AddArticle(this.article).then(res=>{
                     if(res.Code == 0){
-
+                        this.$Notice.open({
+                            title: 'Succeeded',
+                            desc: "博客 " + this.article.title + " 已保存。"
+                        });
+                    }
+                })
+            },
+            getCategory: function(){
+                GetCategory({id:this.categoryId}).then(res=>{
+                    if(res.Code == 0){
+                        this.category = res.Data
                     }
                 })
             },
             addCategory: function(){
                 AddCategory(this.category).then(res=>{
                     if(res.Code == 0){
+                        this.$Notice.open({
+                            title: 'Succeeded',
+                            desc: "分类 " + this.category.name + " 已保存。"
+                        });
                         this.getCategories()
                     }
                 })
@@ -119,6 +150,10 @@
             updateCategory: function(){
                 UpdateCategory(this.category).then(res=>{
                     if(res.Code == 0){
+                        this.$Notice.open({
+                            title: 'Succeeded',
+                            desc: "类别 " + this.category.name + " 已保存。"
+                        });
                         this.getCategories()
                     }
 
@@ -150,7 +185,7 @@
             saveArticle: function(){
                 this.article.category = this.categoryId
                 this.article.content = Base64.encode(this.vhtml)
-                
+                // this.article.outline = this.vhtml.substring(0,120)
                 if(this.article.id == undefined){
                     this.addArticle()
                 }else{
@@ -162,7 +197,6 @@
             this.editor = new Editor(`#editor`)
             this.editor.customConfig.onchange = (html) => {
                 // let text = this.editor.txt.text()
-                
                 this.vhtml = html
             }
             // if (this.cache) localStorage.editorCache = html
@@ -194,7 +228,7 @@
         /* min-height: 30px; */
     }
     .editor {
-        height: 625px;
+        height: 570px;
         text-align: left;
     }
 </style>
