@@ -33,7 +33,8 @@ export default new Vuex.Store({
           {id: 1, path: "/articles", level: 1},
           {id: 2, path: "/article", level: 1},
           {id: 3, path: "/admin", level: 3},
-        ]
+        ], 
+        timeout: 0,
     },
     mutations: {
         auth_request(state) {
@@ -51,6 +52,7 @@ export default new Vuex.Store({
         logout(state) {
           state.status = ''; 
           state.token = '';
+          state.timeout = 0;
           state.accesslevel = 0;
         },
       },
@@ -87,6 +89,7 @@ export default new Vuex.Store({
               commit('auth_error')
               localStorage.removeItem('token')
               localStorage.removeItem('level')
+              localStorage.removeItem('timeout')
               reject(err)
             })
           })

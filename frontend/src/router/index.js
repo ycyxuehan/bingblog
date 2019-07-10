@@ -28,7 +28,7 @@ export default new Router({
       path: '/admin',
       name: 'admin',
       component: AdminContainer,
-      meta:{requiresAuth:false}
+      meta:{requiresAuth:true}
     },
     {
       path: '/article',
