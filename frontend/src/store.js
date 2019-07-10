@@ -28,6 +28,12 @@ export default new Vuex.Store({
         token: localStorage.getItem('token') || '',
         user: "",
         accesslevel: localStorage.getItem('level') || 0,
+        accessList: [
+          {id: 0, path: "/", level: 1},
+          {id: 1, path: "/articles", level: 1},
+          {id: 2, path: "/article", level: 1},
+          {id: 3, path: "/admin", level: 3},
+        ]
     },
     mutations: {
         auth_request(state) {
@@ -64,12 +70,13 @@ export default new Vuex.Store({
                 return
               }
               console.info(params)
-
+              const timeout = res.data.ResultData.timeout;
               const token = res.Data.token;
               const user = res.Data.username;
               const level = res.Data.accesslevel;
               localStorage.setItem('token', token)
               localStorage.setItem('level', level)
+              localStorage.setItem('timeout', timeout)
               // 每次请求接口时，需要在headers添加对应的Token验证
               axios.defaults.headers.common['Authorization'] = token
               // 更新token

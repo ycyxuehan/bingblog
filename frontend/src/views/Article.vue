@@ -10,7 +10,7 @@
                         <h2>{{article.title}}</h2>
                     </Col>
                     <Col span="1">
-                        <Button type="primary" @click="()=>{$router.push('/admin?id=' + article.id)}">编辑</Button>
+                        <Button type="primary" v-if="canAccess" @click="()=>{$router.push('/admin?id=' + article.id)}">编辑</Button>
                     </Col>
                 </Row>
             </div>
@@ -32,6 +32,7 @@
                 categoryId: 1,
                 articleId: 1,
                 vhtml: '',
+                canAccess: false,
             }
         },
         methods: {
@@ -62,6 +63,12 @@
                 return
             }
             this.getArticle()
+            // let canAccess = false;
+            // let accessList = this.$store.getters.accessList;
+            let isLoggedIn = this.$store.getters.isLoggedIn;
+            let timeout = this.$store.getters.sessionTimeOut;
+            let now = Date.now().valueOf()
+            this.canAccess = isLoggedIn && (now/1000 - timeout >= 0)
         },
     }
 </script>

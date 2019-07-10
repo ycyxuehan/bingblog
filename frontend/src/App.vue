@@ -54,8 +54,7 @@ export default {
   height: 780px;
   
 }
-    .w-e-text-container{
-        height: 590px !important;/*!important是重点，因为原div是行内样式设置的高度300px*/
-    }
-
+.w-e-text-container{
+    height: 480px !important;
+}
 </style>

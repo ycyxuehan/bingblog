@@ -29,17 +29,32 @@ router.beforeEach((to, from, next) => {
     if (store.getters.isLoggedIn) {
       //判断是否有权限访问
       let canAccess = false;
-      store.getters.accessList.forEach(access=>{
-        if(access.path == to.path && access.level <= store.getters.accessLevel){
-          console.info("you can access this location: ",to.path);
-          canAccess = true;
+      let accessList = store.getters.accessList;
+      for(var index in accessList){
+        let now = Date.now().valueOf()
+        // console.info(now, now/1000 - store.getters.sessionTimeOut, accessList[index].path == to.path, accessList[index].level <= store.getters.accessLevel)
+        // 判断session是否已过期
+        if(now/1000 - store.getters.sessionTimeOut >= 0){
+          console.info("login timeout")
+          //执行登出清理
+          store.commit('logout')
+          next('/login'); 
           return
         }
-      });
+        if(accessList[index].path == to.path && accessList[index].level <= store.getters.accessLevel){
+          console.info("you can access this location: ",to.path);
+          canAccess = true;
+          break
+        }
+      };
       if(canAccess){
-        next();      
+        if(to.path == '/login'){
+          next('/')
+        }else {
+          next();
+        }
       }else{
-        alert("您无权访问该页面");
+        alert("您无权访问该页面，");
       }
       return
     }    

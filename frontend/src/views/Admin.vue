@@ -2,7 +2,10 @@
     <div id='admin-container'>
         <Card shadow class="admin-card">
             <Row class="admin-row">
-                <Col span="22">
+                <Col span="2">
+                    <span>类别：</span>
+                </Col>
+                <Col span="20">
                     <Select v-model="categoryId">
                         <Option v-for="(ca, index) in categories" :value="ca.id" :key="index">{{ca.name}}</Option>
                     </Select>
@@ -98,7 +101,6 @@
                         if(this.editor){
                             this.editor.txt.html(this.vhtml)
                         }
-
                     }
                 })
             },
@@ -110,7 +112,7 @@
                 })
             },
             updateArticle: function() {
-                UpdateArticle(this.article).then(res=>{
+                UpdateArticle(this.article, this.$store.getters.token).then(res=>{
                     if(res.Code == 0){
                         this.$Notice.open({
                             title: 'Succeeded',
@@ -120,7 +122,7 @@
                 })
             },
             addArticle: function(){
-                AddArticle(this.article).then(res=>{
+                AddArticle(this.article, this.$store.getters.token).then(res=>{
                     if(res.Code == 0){
                         this.$Notice.open({
                             title: 'Succeeded',
@@ -137,7 +139,7 @@
                 })
             },
             addCategory: function(){
-                AddCategory(this.category).then(res=>{
+                AddCategory(this.category, this.$store.getters.token).then(res=>{
                     if(res.Code == 0){
                         this.$Notice.open({
                             title: 'Succeeded',
@@ -148,7 +150,7 @@
                 })
             },
             updateCategory: function(){
-                UpdateCategory(this.category).then(res=>{
+                UpdateCategory(this.category, this.$store.getters.token).then(res=>{
                     if(res.Code == 0){
                         this.$Notice.open({
                             title: 'Succeeded',
@@ -204,6 +206,7 @@
             // this.$emit('on-change', html, text)
             // }
             this.editor.customConfig.zIndex = 0;
+            // this.editor.customConfig.height = "500";
             this.editor.customConfig.onchangeTimeout = this.changeInterval
             // create这个方法一定要在所有配置项之后调用
             this.editor.create()
@@ -228,7 +231,10 @@
         /* min-height: 30px; */
     }
     .editor {
-        height: 570px;
+        height: 520px;
+        max-height: 520px;
         text-align: left;
     }
+    
+    
 </style>

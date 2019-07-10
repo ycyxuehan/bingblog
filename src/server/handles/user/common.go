@@ -20,6 +20,7 @@ type LoginResponse struct {
 	User string `json:"username"`
 	Token string `json:"token"`
 	AccessLevel int `json:"accesslevel"`
+	Timeout int64 		`json:"timeout"`
 }
 
 func Login(c *gin.Context) {
@@ -33,7 +34,7 @@ func Login(c *gin.Context) {
 		responese.Error(c, "username or password is invalidate", nil)
 		return
 	}
-	responese.Success(c, "login successed", &LoginResponse{admin.Username, genToken(admin), admin.AccessLevel})
+	responese.Success(c, "login successed", &LoginResponse{admin.Username, genToken(admin), admin.AccessLevel, time.Now().Unix() + 3600})
 }
 
 func genToken(u User)string{
